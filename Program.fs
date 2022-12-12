@@ -424,3 +424,34 @@ module avgBy_customType =
     
     let avgBy_temp = List.averageBy(fun item -> item.temp) zones
     printfn $"Average of temps: {avgBy_temp}"
+
+// Define type unit
+module type_unit = 
+    type unit = Empty
+
+// Implement fold left
+module fold_left =
+    let rec foldL f z l =
+        match l with
+        | [] -> z
+        | x :: xs -> foldL f (f z x) xs
+
+// Implement fold right
+module fold_right =
+ let rec foldR f z l =
+  match l with
+  | [] -> z
+  | x :: xs -> f (foldR f z xs) x
+
+module filter_using_fold =
+    let filter f l = foldL(fun z x -> if f x then x :: z else z) [] l
+    
+module map_using_fold =
+    let map f l = foldR(fun l2 x -> l2 @ [f x]) [] l
+    
+module find_max_in_list =
+    let rec find_max cmp l =
+        match l with
+        | [] -> raise(Failure "Error")
+        | [x] -> x
+        | x :: xs -> let m = find_max cmp xs in if cmp x m then m else x
